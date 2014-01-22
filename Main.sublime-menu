@@ -2,6 +2,7 @@
 {
 	"id": "edit",
 	"children": [
+		{ "id": "wrap" },
 		{ "command": "clean_mibbit_log" }
 	]
 }
