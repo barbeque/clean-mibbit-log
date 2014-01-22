@@ -1,0 +1,8 @@
+[
+{
+	"id": "edit",
+	"children": [
+		{ "command": "clean_mibbit_log" }
+	]
+}
+]
