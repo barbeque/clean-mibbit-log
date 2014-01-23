@@ -5,4 +5,3 @@ This will add an item to your Edit menu to clean Mibbit IRC logs into a "traditi
 Known Issues
 ---
 * It expects a buffer of just IRC logs; bad things may happen if something is more complicated
-* It might not understand timestamps inside IRC log lines. This has not been tested excessively. Sublime doesn't seem to distinguish line-by-line as the regex ^ wording doesn't work the way I expected it to.
