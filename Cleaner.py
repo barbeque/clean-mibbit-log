@@ -6,23 +6,22 @@ class CleanMibbitLogCommand(sublime_plugin.TextCommand):
 		# grab everything from the current buffer...
 		reg = sublime.Region(0, self.view.size())
 		# split it up by lines... but i'm not really sure if it actually does this
-		lines = self.view.split_by_newlines(reg)
-		for lineRegion in lines:
-			# why do i have to do this twice?
-			# maybe because the buffer changed since the last time i called this region...
-			# ... so the absolute character position is wrong again.
-			# this SHOULD work properly by getting the line that contains the region.
-			realLineRegion = self.view.line(lineRegion)
-			text = self.view.substr(realLineRegion)
+		lineRegions = self.view.split_by_newlines(reg)
+		# copy into a buffer of strings
+		lines = map(lambda r: self.view.substr(r), lineRegions)
+		editedLines = []
+		for text in lines:
 			timestampsStripped = self.removeTimestamps(text)
 			usernamesReformatted = self.formatUsernames(timestampsStripped)
-			# replace the buffer with the results.
-			self.view.replace(edit, realLineRegion, usernamesReformatted)
+			editedLines.append(usernamesReformatted)
+		# now write it back in
+		finishedBuffer = '\n'.join(editedLines)
+		self.view.replace(edit, reg, finishedBuffer)
 	def removeTimestamps(self, logText):
 		# replace [0-9]+:[0-9]+\t with nothing
 		return re.sub('^[0-9]+:[0-9]+\t', '', logText)
 	def formatUsernames(self, logText):
-		# replace [A-z]+\t, putting brackets about.
+		# replace [A-z\S]+\t, putting brackets about.
 		# raw strings (the r'') are very important here.
-		return re.sub('([A-z]+)\t', r'<\1> ', logText)
+		return re.sub('([A-z\S]+)\t', r'<\1> ', logText)
 
